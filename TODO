@@ -1,8 +1,17 @@
-//TODO Refaire le systeme avec des composants
-//TODO Ajouter la possibilité de sauvegarder dans le navigateur le projet, de l'exporter et de l'importer.
-//TODO Ajouter l'accomplissement des taches.
-//TODO Modal pour montrer que un chrono est en cours. et pour annuler le chrono
-//TODO Snooze +5min +15min
+//** objectifs : Minuteur basique qui fonctionne pour les taches qu'on lui donne. Fais un réveil pour signaler la pause, et un autre pour signaler la reprise du boulot
+
+//** Must have
+//TODO annuler un minuteur.
+//TODO modifier une task
+//TODO signaler qu'un chrono est en cours (avec une icone ou avec un modal)
+//TODO Accomplissement des taches
 //TODO Alarme pour reprendre le travail
-//TODOPossibilité de lire les fichiers TODO et de remplir directement les taches.
+
+//**NTH Nice to have 
 //TODO Arranger le style
+//TODO permettre une visualisation récursive des taches. Pas juste limitée à 3 niveaux
+//TODO Permettre l'importation et l'exportation d'un projet. Permettre la sauvegarde dans le navigateur
+//TODO Snooze +5min +15min
+
+//** HTI Hard to implement
+//TODO Possibilité de lire les fichiers TODO écrit sous les formats les plus courants.
