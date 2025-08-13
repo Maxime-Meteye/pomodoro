@@ -21,6 +21,11 @@
     </ul>
 </template>
 <script setup>
+
+
+    //TODO Make the function to toggle the completion of task or to mark tasks as incomplete.
+    //TODOTidy up your code, the store especially
+
     import { useTaskStore } from '@/stores/taskStore';
     import {ref, watch} from 'vue'
     const taskStore = useTaskStore();

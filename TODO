@@ -2,15 +2,12 @@
 
 //** Must have
 //TODO annuler un minuteur.
-//TODO modifier une task
 //TODO signaler qu'un chrono est en cours (avec une icone ou avec un modal)
-//TODO Accomplissement des taches
 //TODO Alarme pour reprendre le travail
 
 //**NTH Nice to have 
-//TODO Arranger le style
-//TODO permettre une visualisation récursive des taches. Pas juste limitée à 3 niveaux
 //TODO Permettre l'importation et l'exportation d'un projet. Permettre la sauvegarde dans le navigateur
+//TODO Arranger le style
 //TODO Snooze +5min +15min
 
 //** HTI Hard to implement
