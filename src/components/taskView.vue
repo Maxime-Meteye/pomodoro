@@ -6,12 +6,13 @@
                 <button @click="add_child(goal_object.id)">+</button>
                 <button @click="delete_child(goal_object.id)">-</button>
                 <button @click="startTask(goal_object.title)"><span class="material-symbols-outlined">alarm</span></button>
-                <button><span>...</span></button>
+                <button v-if="goal_object?.sub_goals?.length == 0 " @click="finishTask(goal_object.id)"><span class="material-symbols-outlined">check</span></button>
             </div>
         </li>
         <li v-else>
-            <form @submit.prevent="">
+            <form @submit.prevent="editing_task = -1">
                 <textarea v-model="goal_object.title">{{ goal_object.title }}</textarea>
+                <button><span class="material-symbols-outlined">check</span></button>
             </form>
         </li>
         <ul v-for="task in goal_object.sub_goals">
@@ -24,8 +25,6 @@
     import {ref} from 'vue'
     const taskStore = useTaskStore();
     const editing_task = ref(-1)
-
-    //TODO Important : décider de comment tu vas permettre de modifier les éléments.
 
     defineProps(['goal_object'])
 
@@ -43,10 +42,8 @@
         editing_task.value = id
         console.log("edit")
     }
-</script>
 
-<style scoped>
-    #alarm{
-        background-color: aquamarine;
+    const finishTask = (id)=>{
+        taskStore.completeTask(id);
     }
-</style>
+</script>

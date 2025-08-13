@@ -59,35 +59,54 @@ function deleteFromTree(target_id){
     },"MATCH_PARENT")
 }
 
+function completeTask(target_id){
+  findInTree(target_id,goals.value,(el)=>{
+    el.complete = true;
+  })
+}
+
+const refreshTasksState = (obj,callbackFunction)=>{
+  //console.log('filter',filter)
+  if(obj.sub_goals.some((el)=>
+    el?.complete == false
+  )){
+    obj.complete = false
+  }else{
+
+  }
+}//// Fonction simple comme findintree, mais retourne un nombre chaque appel à la fonction retourne ce nombre puis incrémente de 1 en fonction de ce qui est recherché.
+// si retour > 0 mettre le goal en pas fini.
+// Si 0 > mettre le goal en fini.
+
 const add_in_tree = (new_goal, parent ,obj)=>{
-    findInTree(parent,obj,(element)=>{
-        element.sub_goals.push({
-            title: new_goal,
-            complete: false,
-            sub_goals:[],
-            id: ID.value
-        })
-        select_toggle(ID.value)
-        ID.value++;
-    })
+  findInTree(parent,obj,(element)=>{
+      element.sub_goals.push({
+          title: new_goal,
+          complete: false,
+          sub_goals:[],
+          id: ID.value
+      })
+      select_toggle(ID.value)
+      ID.value++;
+  })
 }
 
 const findInTree = (target_id, obj,callbackFunction = ()=>{},mode = "")=>{
-    let filter = obj.id == target_id
-    if(mode == "MATCH_PARENT"){
-        filter = obj.sub_goals.findIndex((element)=>
-            element.id == target_id
-        ) > -1;
-    }
-    //console.log('filter',filter)
-    if(filter){
-        console.log(obj.title)
-        callbackFunction(obj);
-    }else{
-        obj.sub_goals.find(el=>{
-            findInTree(target_id,el,callbackFunction,mode)
-        })
-    }
+  let filter = obj.id == target_id
+  if(mode == "MATCH_PARENT"){
+      filter = obj.sub_goals.findIndex((element)=>
+          element.id == target_id
+      ) > -1;
+  }
+  //console.log('filter',filter)
+  if(filter){
+      console.log(obj.title)
+      callbackFunction(obj);
+  }else{
+      obj.sub_goals.find(el=>{
+          findInTree(target_id,el,callbackFunction,mode)
+      })
+  }
 }
 
 const sub_goal_validation = (submited_sub_goal)=>{
@@ -109,7 +128,7 @@ function startTask(task){
   const regex = /(\d{1,3})/
   const time_prompt = prompt("How many minutes before a break ? Default is 25min")
   const match = time_prompt.match(regex)
-  const ringtone = new Audio('/src/assets/alarm.mp3')
+  const ringtone = new Audio('/src/assets/audio/alarm.mp3')
 
   if(match){
     const task_time = parseInt(match[1]);
@@ -132,5 +151,5 @@ watch(goals,()=>{
   console.log(goals.value)
 },{deep:true})
 
-return{goals,selected_goal,select_toggle,add_sub_goal, startTask, deleteFromTree}
+return{goals,selected_goal,select_toggle,add_sub_goal, startTask, deleteFromTree, completeTask}
 })
