@@ -1,6 +1,6 @@
 <template>
     <ul>
-        <li v-if="editing_task != goal_object.id">
+        <li v-if="editing_task != goal_object.id" :class="{complete: goal_object.complete, incomplete: !goal_object.complete}">
             <button @click="taskStore.select_toggle(goal_object.id)" v-on:dblclick="editTask(goal_object.id)">{{ goal_object.title }}</button>
             <div v-if="taskStore.selected_goal == goal_object.id">
                 <button @click="add_child(goal_object.id)">+</button>
@@ -22,11 +22,12 @@
 </template>
 <script setup>
     import { useTaskStore } from '@/stores/taskStore';
-    import {ref} from 'vue'
+    import {ref, watch} from 'vue'
     const taskStore = useTaskStore();
     const editing_task = ref(-1)
 
-    defineProps(['goal_object'])
+    const props = defineProps(['goal_object'])
+    const prop_goal_object = props.goal_object
 
     const add_child = (parent)=>{
         taskStore.add_sub_goal(parent,prompt(`what's your task ?`))
@@ -46,4 +47,25 @@
     const finishTask = (id)=>{
         taskStore.completeTask(id);
     }
+    /*
+    watch(prop_goal_object,()=>{
+        if(prop_goal_object.sub_goals.some(el=>!el.complete) && prop_goal_object.sub_goals.length > 0){
+            console.log("watcher complete false",prop_goal_object.title);
+            prop_goal_object.complete = false;
+        }else{
+            console.log("watcher complete true",prop_goal_object.title);
+            prop_goal_object.complete = true;
+        }
+    },{ deep: 1 })
+    */
 </script>
+
+<style scoped>
+    .complete{
+        background-color: green;
+    }
+
+    .incomplete{
+        background-color: red;
+    }
+</style>
