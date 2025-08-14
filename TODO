@@ -4,9 +4,10 @@
 //TODO annuler un minuteur.
 //TODO signaler qu'un chrono est en cours (avec une icone ou avec un modal)
 //TODO Alarme pour reprendre le travail
+//TODOTidy up your code, the store especially
 
 //**NTH Nice to have 
-//TODO Permettre l'importation et l'exportation d'un projet. Permettre la sauvegarde dans le navigateur
+//TODO Permettre la sauvegarde dans le navigateur
 //TODO Arranger le style
 //TODO Snooze +5min +15min
 

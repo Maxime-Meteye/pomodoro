@@ -6,7 +6,10 @@
                 <button @click="add_child(goal_object.id)">+</button>
                 <button @click="delete_child(goal_object.id)">-</button>
                 <button @click="startTask(goal_object.title)"><span class="material-symbols-outlined">alarm</span></button>
-                <button v-if="goal_object?.sub_goals?.length == 0 " @click="finishTask(goal_object.id)"><span class="material-symbols-outlined">check</span></button>
+                <button v-if="goal_object?.sub_goals?.length == 0 " @click="toggleTaskCompletion(goal_object.id)">
+                    <span class="material-symbols-outlined" v-if="!goal_object.complete">check</span>
+                    <span class="material-symbols-outlined" v-else>close</span>
+                </button>
             </div>
         </li>
         <li v-else>
@@ -21,10 +24,6 @@
     </ul>
 </template>
 <script setup>
-
-
-    //TODO Make the function to toggle the completion of task or to mark tasks as incomplete.
-    //TODOTidy up your code, the store especially
 
     import { useTaskStore } from '@/stores/taskStore';
     import {ref, watch} from 'vue'
@@ -49,8 +48,8 @@
         console.log("edit")
     }
 
-    const finishTask = (id)=>{
-        taskStore.completeTask(id);
+    const toggleTaskCompletion = (id)=>{
+        taskStore.toggleTaskCompletion(id);
     }
     /*
     watch(prop_goal_object,()=>{

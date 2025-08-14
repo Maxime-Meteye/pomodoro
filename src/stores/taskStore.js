@@ -64,9 +64,13 @@ function deleteFromTree(target_id){
     refreshTasksState(goals.value);
 }
 
-function completeTask(target_id){
+function toggleTaskCompletion(target_id){
   findInTree(target_id, goals.value,(el)=>{
-    el.complete = true;
+    if(el.complete){
+      el.complete = false;
+    }else{
+      el.complete = true;
+    }
   })
   refreshTasksState(goals.value);
 }
@@ -74,39 +78,18 @@ function completeTask(target_id){
 
 
 const refreshTasksState = (obj)=>{
+  let child_incomplete_task = 0
   obj.sub_goals.forEach(element => {
-    const child_incomplete_task = refreshTasksState(element)
+    child_incomplete_task += refreshTasksState(element)
     obj.complete = child_incomplete_task === 0;
-    return obj.complete;
-  });
-
-  
-  let incomplete_task = obj.complete?0:1
-  return incomplete_task;
-}
-const OLDrefreshTasksState = (obj)=>{
-  obj.sub_goals.forEach(element => {
-    const child_incomplete_task = refreshTasksState(element)
-    if( child_incomplete_task > 0){
-      //console.log(">>>>>>>>",child_incomplete_task)
-      //console.log("incomplete child:",element,"Parent :",obj.title)
-      obj.complete = false
-      incomplete_task += child_incomplete_task
-    }else if(child_incomplete_task == 0){
-      //console.log("No incomplete child found",obj.title)
-      obj.complete = true
-      incomplete_task = obj.complete?0:1
+    if(!obj.complete){
+      child_incomplete_task ++;
     }
-  });
-
-
+    return obj.complete;
+  });  
   let incomplete_task = obj.complete?0:1
   return incomplete_task;
 }
-
-//// Fonction simple comme findintree, mais retourne un nombre chaque appel à la fonction retourne ce nombre puis incrémente de 1 en fonction de ce qui est recherché.
-// si retour > 0 mettre le goal en pas fini.
-// Si 0 > mettre le goal en fini.
 
 const add_in_tree = (new_goal, parent ,obj)=>{
   ID.value++;
@@ -173,10 +156,17 @@ function startTask(task){
   }
 }
 
+function exportTreeAsJson(){
+  return JSON.stringify(goals.value)
+}
+
+function loadTree(tree_to_load){
+  goals.value = (JSON.parse(tree_to_load));
+}
 
 watch(goals,()=>{
   //console.log('watcher goals',goals.value)
-},{deep:true})
+},{deep:false})
 
-return{goals,selected_goal,select_toggle,add_sub_goal, startTask, deleteFromTree, completeTask}
+return{goals,selected_goal,select_toggle,add_sub_goal, startTask, deleteFromTree, toggleTaskCompletion, exportTreeAsJson, loadTree}
 })
