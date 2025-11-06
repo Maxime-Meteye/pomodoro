@@ -3,13 +3,15 @@ import {ref,watch} from 'vue'
 
 export const useTaskStore =  defineStore('taskStore',()=>{
     let ID = ref(0);
+	const key = ref(); //TODO Generate key on init : timestamp/math.random
     const selected_goal = ref("")
-    const goals = ref({
+	const goals = ref({
           title: 'Your project name',
           complete: false,
           sub_goals:[],
           id:ID.value
-      }) /*
+      })
+	/*
 {
   title:"Add canvas with moving square",
   complete: false,
@@ -37,6 +39,7 @@ function select_toggle (id){
 }
 
 function add_sub_goal( parent = -1, child_name){
+
   if(parent == -1 && goals.value.title == undefined || goals.value.title == ""){//create the first goal, if no goal is provided
     console.log('>>>>>first element')
       goals.value = {

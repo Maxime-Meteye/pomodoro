@@ -1,15 +1,9 @@
-//** objectifs : Minuteur basique qui fonctionne pour les taches qu'on lui donne. Fais un réveil pour signaler la pause, et un autre pour signaler la reprise du boulot
+/*objectifs : Minuteur basique qui fonctionne pour les taches qu'on lui donne. Fais un réveil pour signaler la pause, et un autre pour signaler la reprise du boulot
 
-//** Must have
-//TODO annuler un minuteur.
-//TODO signaler qu'un chrono est en cours (avec une icone ou avec un modal)
-//TODO Alarme pour reprendre le travail
-//TODOTidy up your code, the store especially
-
-//**NTH Nice to have 
-//TODO Permettre la sauvegarde dans le navigateur
-//TODO Arranger le style
-//TODO Snooze +5min +15min
-
-//** HTI Hard to implement
-//TODO Possibilité de lire les fichiers TODO écrit sous les formats les plus courants.
+MUST HAVE :
+Enregistrer dans le localStorage
+Charger dans le localstorage.
+Représentation graphique du minuteur. Combien de temps restant etc.
+Savoir si on est dans un chrono de travail, de pause courte ou de pause longue
+Arréter un minuteur
+*/
