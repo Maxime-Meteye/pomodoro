@@ -3,7 +3,8 @@ import {ref,watch} from 'vue'
 
 export const useTaskStore =  defineStore('taskStore',()=>{
     let ID = ref(0);
-	const key = ref(); //TODO Generate key on init : timestamp/math.random
+	const creation_date = ref(Date.now());
+	const key = ref(`pom-${Math.random()}-${creation_date.value}`);
     const selected_goal = ref("")
 	const goals = ref({
           title: 'Your project name',
@@ -171,5 +172,5 @@ watch(goals,()=>{
   //console.log('watcher goals',goals.value)
 },{deep:false})
 
-return{goals,selected_goal,select_toggle,add_sub_goal, startTask, deleteFromTree, toggleTaskCompletion, exportTreeAsJson, loadTree}
+return{goals,selected_goal,creation_date, key,select_toggle,add_sub_goal, startTask, deleteFromTree, toggleTaskCompletion, exportTreeAsJson, loadTree}
 })

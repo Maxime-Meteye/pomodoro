@@ -3,21 +3,40 @@
     <div>
         <ul>
             <li>
-                <button @click="exportTree()" popovertarget="treeWindow">Export as JSON</button>
+                <button @click="exportTree()" popovertarget="popoverWindow">Export as JSON</button>
             </li>
             <li>
-                <button popovertarget="popoverWindow">Import as JSON</button>
+                <button popovertarget="popoverWindow" @click="popover_state = 'show_json'">Import as JSON</button>
             </li>
 			<li>
-                <button popovertarget="popoverWindow" @click="saveInLocalStorage">Save</button>
+                <button popovertarget="popoverWindow" @click="refreshKeys(true)">Load</button>
+            </li>
+			<li>
+                <button @click="saveInLocalStorage()">Save</button>
             </li>
         </ul>
-		<popover-view>
+		<popover-view v-if="popover_state == 'show_json'">
 			<form @submit.prevent="importTree(json_tree)">
 				<textarea v-model="json_tree"></textarea>
 				<button>Load</button>
 			</form>
 		</popover-view>
+		<popover-view v-if="popover_state == 'show_saved_projects'">
+
+			<div v-if="projects_keys.length == 0">
+				<p>No saved projects</p>
+			</div>
+
+			<ul v-else v-for="key in projects_keys">
+				<li>
+					<button @click="loadTreeFromLocalStorage(key)" popovertarget='popoverWindow'>
+						<h5>{{ key.title }}</h5>
+						<p>{{ key.creation }}</p>
+					</button>
+				</li>
+			</ul>
+		</popover-view>
+
     </div>
 </template>
 <script setup>
@@ -27,6 +46,8 @@ import {ref} from 'vue';
 
 const json_tree = ref();
 const taskStore = useTaskStore();
+const popover_state = ref("");
+const projects_keys = ref([]);
 
 const exportTree = ()=>{
     json_tree.value = taskStore.exportTreeAsJson();
@@ -36,17 +57,78 @@ const importTree = (tree)=>{
 }
 
 
+
+const loadTreeFromLocalStorage = (key)=>{
+	importTree(localStorage.getItem(key.id));
+	taskStore.key = key.id;
+	taskStore.creation = key.creation
+	taskStore.title = key.title
+}
+
 const saveInLocalStorage = ()=>{
+	/*Making the key and value that will be stored */
 	let tree = taskStore.exportTreeAsJson();
 
+	const key = {
+		id : taskStore.key,
+		creation : taskStore.creation_date,
+		title : taskStore.goals.title
+	}
+
+	//TODO Handle case where pom_key is null.
+	/*Fetching existing keys */
+	let json_keys = localStorage.getItem("pom_key")
+	if(json_keys === null){
+		json_keys = JSON.stringify([]);
+	}
+	const stored_keys = JSON.parse(json_keys)
+	console.log(typeof(stored_keys));
+	/*Whether key was saved in stored_keys or not */
+	let saved_status = 0;
+	/*Searching key with identic id */
+	for(const stored_key in stored_keys){
+		if(stored_keys[stored_key].id == key.id){
+			//actualising key with newer info
+			stored_keys[stored_key] = key;
+			saved_status = 1
+			break;
+		}
+	}
+	//if key wasn't saved no similar key was found we push it into the array.
+	if(saved_status === 0){
+		stored_keys.push(key);
+	}
+	/*Saving keys */
+	localStorage.setItem("pom_key", JSON.stringify(stored_keys))
+	localStorage.setItem(key.id, tree)
+
+	//TODO Handle feedback
+	console.log(localStorage);
 }
 
-localStorage.key = JSON.stringify(["1","2"])
-
-
-if(json_tree.value == undefined){
-	console.log(JSON.parse(localStorage.key))
+const refreshKeys = (open_popover = false)=>{
+	cleanLocalStorage();
+	projects_keys.value = JSON.parse(localStorage.getItem("pom_key"));
+	console.log(projects_keys.value);
+	if(open_popover){
+		popover_state.value = "show_saved_projects";
+		console.log(projects_keys.value);
+	}else{
+		popover_state.value = ""
+	}
 }
+
+const cleanLocalStorage = ()=>{
+	const stored_keys = JSON.parse(localStorage.getItem("pom_key"))
+	for(const key in stored_keys){
+		if(localStorage.getItem(stored_keys[key].id) === null){
+			stored_keys.splice(key,1);
+		}
+	}
+	localStorage.setItem("pom_key", JSON.stringify(stored_keys));
+}
+
+
 
 /*
 	lookup localstorage.key if not empty
@@ -55,11 +137,6 @@ if(json_tree.value == undefined){
 			lookup localstorage[chosenkey] use try catch
 			when saving save under localstorage[chosenkey]
 */
-
-
-//localStorage.key
-
-console.log(localStorage);
 
 </script>
 

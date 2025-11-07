@@ -1,8 +1,7 @@
 /*objectifs : Minuteur basique qui fonctionne pour les taches qu'on lui donne. Fais un réveil pour signaler la pause, et un autre pour signaler la reprise du boulot
 
 MUST HAVE :
-Enregistrer dans le localStorage
-Charger dans le localstorage.
+try catch for everything localStorage Related
 Représentation graphique du minuteur. Combien de temps restant etc.
 Savoir si on est dans un chrono de travail, de pause courte ou de pause longue
 Arréter un minuteur
