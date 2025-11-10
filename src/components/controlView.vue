@@ -42,32 +42,42 @@
 <script setup>
 import popoverView from '@/components/popoverView.vue'
 import { useTaskStore } from '@/stores/taskStore';
+import { useStorageStore } from '@/stores/storageStore';
 import {ref} from 'vue';
 
 const json_tree = ref();
 const taskStore = useTaskStore();
+const storageStore = useStorageStore();
 const popover_state = ref("");
 const projects_keys = ref([]);
+
+
+
 
 const exportTree = ()=>{
     json_tree.value = taskStore.exportTreeAsJson();
 }
 const importTree = (tree)=>{
-    taskStore.loadTree(tree);
+    taskStore.loadJsonTree(tree);
 }
 
 
 
 const loadTreeFromLocalStorage = (key)=>{
-	importTree(localStorage.getItem(key.id));
-	taskStore.key = key.id;
-	taskStore.creation = key.creation
-	taskStore.title = key.title
+	try{
+		taskStore.loadTree(storageStore.getFromLocalStorage(key.id));
+		taskStore.key = key.id;
+		taskStore.creation = key.creation
+		taskStore.title = key.title
+	}catch(err){
+		window.alert("Cannot find local storage")
+		console.log(err);
+	}
 }
 
 const saveInLocalStorage = ()=>{
 	/*Making the key and value that will be stored */
-	let tree = taskStore.exportTreeAsJson();
+	let tree = taskStore.goals;
 
 	const key = {
 		id : taskStore.key,
@@ -77,55 +87,60 @@ const saveInLocalStorage = ()=>{
 
 	//TODO Handle case where pom_key is null.
 	/*Fetching existing keys */
-	let json_keys = localStorage.getItem("pom_key")
-	if(json_keys === null){
-		json_keys = JSON.stringify([]);
-	}
-	const stored_keys = JSON.parse(json_keys)
-	console.log(typeof(stored_keys));
-	/*Whether key was saved in stored_keys or not */
-	let saved_status = 0;
-	/*Searching key with identic id */
-	for(const stored_key in stored_keys){
-		if(stored_keys[stored_key].id == key.id){
-			//actualising key with newer info
-			stored_keys[stored_key] = key;
-			saved_status = 1
-			break;
+	try{
+		const stored_keys = storageStore.getFromLocalStorage("pom_key", [])
+		/*Whether key was saved in stored_keys or not */
+		let saved_status = 0;
+		/*Searching key with identic id */
+		for(const stored_key in stored_keys){
+			if(stored_keys[stored_key].id == key.id){
+				//actualising key with newer info
+				stored_keys[stored_key] = key;
+				saved_status = 1
+				break;
+			}
 		}
-	}
-	//if key wasn't saved no similar key was found we push it into the array.
-	if(saved_status === 0){
-		stored_keys.push(key);
-	}
-	/*Saving keys */
-	localStorage.setItem("pom_key", JSON.stringify(stored_keys))
-	localStorage.setItem(key.id, tree)
+		//if key wasn't saved no similar key was found we push it into the array.
+		if(saved_status === 0){
+			stored_keys.push(key);
+		}
+		/*Saving keys */
+		storageStore.setLocalStorage("pom_key",stored_keys);
+		storageStore.setLocalStorage(key.id, tree)
 
-	//TODO Handle feedback
-	console.log(localStorage);
+		//TODO Handle feedback
+	}catch(err){
+		window.alert("Cannot save project in local storage: Memory full. Please delete an unused project.")
+	}
+	
 }
 
 const refreshKeys = (open_popover = false)=>{
-	cleanLocalStorage();
-	projects_keys.value = JSON.parse(localStorage.getItem("pom_key"));
-	console.log(projects_keys.value);
-	if(open_popover){
-		popover_state.value = "show_saved_projects";
+	try{
+		cleanKeys();
+		projects_keys.value = storageStore.getFromLocalStorage("pom_key");
 		console.log(projects_keys.value);
-	}else{
-		popover_state.value = ""
+		if(open_popover){
+			popover_state.value = "show_saved_projects";
+			console.log(projects_keys.value);
+		}else{
+			popover_state.value = ""
+		}
+	}catch(err){
+		window.alert("Cannot retrieve projects from local storage");
+
 	}
 }
 
-const cleanLocalStorage = ()=>{
-	const stored_keys = JSON.parse(localStorage.getItem("pom_key"))
+const cleanKeys = ()=>{
+	const stored_keys = storageStore.getFromLocalStorage("pom_key");
+	//Lookup every value associated with existing key. Delete the value if orphan
 	for(const key in stored_keys){
-		if(localStorage.getItem(stored_keys[key].id) === null){
+		if(storageStore.getFromLocalStorage(stored_keys[key].id) === null){
 			stored_keys.splice(key,1);
 		}
 	}
-	localStorage.setItem("pom_key", JSON.stringify(stored_keys));
+	storageStore.setLocalStorage("pom_key", stored_keys);
 }
 
 

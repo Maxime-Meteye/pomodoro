@@ -165,12 +165,29 @@ function exportTreeAsJson(){
 }
 
 function loadTree(tree_to_load){
-  goals.value = (JSON.parse(tree_to_load));
+  goals.value = (tree_to_load);
+}
+
+function loadJsonTree(json){
+	loadTree(JSON.parse(json));
 }
 
 watch(goals,()=>{
   //console.log('watcher goals',goals.value)
 },{deep:false})
 
-return{goals,selected_goal,creation_date, key,select_toggle,add_sub_goal, startTask, deleteFromTree, toggleTaskCompletion, exportTreeAsJson, loadTree}
+return{
+	goals,
+	selected_goal,
+	creation_date,
+	key,
+	select_toggle,
+	add_sub_goal,
+	startTask,
+	deleteFromTree,
+	toggleTaskCompletion,
+	exportTreeAsJson,
+	loadTree,
+	loadJsonTree
+}
 })
