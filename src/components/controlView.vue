@@ -1,6 +1,7 @@
 <template setup>
 
     <div>
+		<timeManagementView></timeManagementView>
         <ul>
             <li>
                 <button @click="exportTree()" popovertarget="popoverWindow">Export as JSON</button>
@@ -41,6 +42,7 @@
 </template>
 <script setup>
 import popoverView from '@/components/popoverView.vue'
+import timeManagementView from '@/components/timeManagementView.vue';
 import { useTaskStore } from '@/stores/taskStore';
 import { useStorageStore } from '@/stores/storageStore';
 import {ref} from 'vue';
