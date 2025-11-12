@@ -4,12 +4,27 @@
     <meta charset="UTF-8">
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+	<link rel="stylesheet" href="./src/style/breezeflex.css">
+	<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,501&display=swap" rel="stylesheet">
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vite App</title>
   </head>
-  <body>
-    <div id="app"></div>
+  <body class="theme-dark">
+    <div id="app" class="container"></div>
     <script type="module" src="/src/main.js"></script>
+	<style>
+		body{
+			font-family: 'Satoshi', sans-serif;
+			min-height: 100vh;
+			min-height: 100dvh;
+			width: min(100%, 2000px);
+			margin-inline: auto;
+			background-image: conic-gradient(from 130deg, var(--background-color) ,var(--border-color),var(--background-color));
+			background-position: right top;
+			color: var(--text-color);
+			overflow-y: auto;
+		}
+	</style>
   </body>
 </html>

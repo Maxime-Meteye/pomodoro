@@ -6,7 +6,7 @@ import alarm from '@/assets/audio/alarm.mp3';
 export const useAlarmStore = defineStore("alarmStore",()=>{
 	let alarm_timeout_id = ref(0) ; //TimeoutID :int
 	let timer_interval_id = ref(0);  //TimeoutID :int
-	const time_before_alarm = ref(-1) ; //Time left before alarm rings :int
+	const time_before_alarm = ref(0) ; //Time left before alarm rings :int
 	const work_duration = ref(3000); // 25*60000 Time used as reference for work duration :int
 	const short_break_duration = ref(5*1000); //Time used as reference for short break duration :int
 	const long_break_duration = ref(25*1000); //Time used as reference for long break duration :int
@@ -16,9 +16,9 @@ export const useAlarmStore = defineStore("alarmStore",()=>{
 	const can_make_new_alarm = ref(true);
 	const work_cycles_before_long_break = ref(3);
 	const work_cycles_complete = ref(0);
-	const end_of_work_cycle = ref(false); //is used similarly to event. In conjunction with watchers
-	const end_of_break_cycle = ref(false); //is used similarly to event. In conjunction with watchers
 	const on_break = ref(false);
+	const break_event_name = "break_cycle_complete";
+	const work_event_name = "work_cycle_complete";
 
 	function  createAlarm (duration,callback = ()=>{}){
 		if(can_make_new_alarm.value){
@@ -27,7 +27,8 @@ export const useAlarmStore = defineStore("alarmStore",()=>{
 			alarm_timeout_id.value = setTimeout(()=>{
 				ringtones[work_ringtone.value].play(); //can be changed later to customise ringtone for each situation.
 				clearInterval(timer_interval_id.value);
-				time_before_alarm.value = -1;
+				alarm_timeout_id.value = 0;
+				time_before_alarm.value = 0;
 				callback();
 			},duration)
 			time_before_alarm.value = duration;
@@ -56,12 +57,12 @@ export const useAlarmStore = defineStore("alarmStore",()=>{
 	function pauseTimer(){
 		console.log("pause")
 		deleteAlarm();
-		console.log(can_make_new_alarm.value)
+
 	}
 
 	function stopTimer(){
 		deleteAlarm();
-		time_before_alarm.value = -1;
+		time_before_alarm.value = 0;
 	}
 
 	function resumeTimer(){
@@ -79,34 +80,31 @@ export const useAlarmStore = defineStore("alarmStore",()=>{
 		});
 	}
 
-	function emitEvent(event){
-		
-		event.value = true;
-		setTimeout(()=>{
-			event.value = false;
-		},200)
+	function emitEvent(name){
+		document.dispatchEvent(new CustomEvent(name));
 	}
 
 	function completeWorkCycle(){
 		work_cycles_complete.value ++;
 		if(work_cycles_complete.value <= work_cycles_before_long_break.value){
-			emitEvent(end_of_work_cycle);
+			emitEvent(work_event_name);
 		}else{
+			emitEvent(work_event_name);
 			work_cycles_complete.value = 0;
-			emitEvent(end_of_work_cycle);
 		}
 		on_break.value = true;
 	}
 
 	function startBreak(){
+		
 		if(work_cycles_complete.value != 0){
 			createAlarm(short_break_duration.value,()=>{
-				emitEvent(end_of_break_cycle);
+				emitEvent(break_event_name);
 				on_break.value = false;
 			});
 		}else{
 			createAlarm(long_break_duration.value,()=>{
-				emitEvent(end_of_break_cycle);
+				emitEvent(break_event_name);
 				on_break.value = false;
 			});
 		}
@@ -121,16 +119,17 @@ export const useAlarmStore = defineStore("alarmStore",()=>{
 	}
 
 	function startTimer(){
-		if(time_before_alarm.value == -1){
+		if(time_before_alarm.value == 0){
 			startCycle();
 		}else{
 			createAlarm(time_before_alarm.value,()=>{
 				if(!on_break.value){
-					emitEvent(end_of_work_cycle)
+					emitEvent(work_event_name)
 					on_break.value = true;
 					startBreak();
 				}else{
-					emitEvent(end_of_break_cycle);
+					emitEvent(break_event_name);
+					
 				}
 			})
 		}
@@ -141,15 +140,12 @@ export const useAlarmStore = defineStore("alarmStore",()=>{
 		startWork,
 		resumeTimer,
 		pauseTimer,
-		deleteAlarm,
+		stopTimer,
 		startCycle,
 		startTimer,
 		time_before_alarm,
-		end_of_work_cycle,
 		work_cycles_complete,
-		end_of_break_cycle,
-		can_make_new_alarm
-		
-		
+		can_make_new_alarm,
+		alarm_timeout_id
 	};
 })
