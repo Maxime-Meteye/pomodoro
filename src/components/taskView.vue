@@ -1,26 +1,31 @@
 <template>
-    <ul>
-        <li v-if="editing_task != goal_object.id" :class="{complete: goal_object.complete, incomplete: !goal_object.complete}">
-            <button @click="taskStore.select_toggle(goal_object.id)" v-on:dblclick="editTask(goal_object.id)">{{ goal_object.title }}</button>
+    <ul class="glass round task" :class="{complete: goal_object.complete, incomplete: !goal_object.complete}">
+        <li v-if="editing_task != goal_object.id"  >
+            <button @click="taskStore.select_toggle(goal_object.id)" v-on:dblclick="editTask(goal_object.id)" class="task_name">{{ goal_object.title }}</button>
+			<button @click="editTask(goal_object.id)" class="btn glass more_btn">...</button>
             <div v-if="taskStore.selected_goal == goal_object.id">
-                <button @click="add_child(goal_object.id)">+</button>
-                <button @click="delete_child(goal_object.id)">-</button>
+                <button class="btn glass" @click="add_child(goal_object.id)">+</button>
+                <button class="btn glass" @click="delete_child(goal_object.id)">-</button>
+				<!--
                 <button @click="startTask(goal_object.title)"><span class="material-symbols-outlined">alarm</span></button>
-                <button v-if="goal_object?.sub_goals?.length == 0 " @click="toggleTaskCompletion(goal_object.id)">
+				-->
+                <button class="btn glass" v-if="goal_object?.sub_goals?.length == 0 " @click="toggleTaskCompletion(goal_object.id)">
                     <span class="material-symbols-outlined" v-if="!goal_object.complete">check</span>
                     <span class="material-symbols-outlined" v-else>close</span>
                 </button>
             </div>
         </li>
         <li v-else>
-            <form @submit.prevent="editing_task = -1">
-                <textarea v-model="goal_object.title">{{ goal_object.title }}</textarea>
-                <button><span class="material-symbols-outlined">check</span></button>
+            <form @submit.prevent="editing_task = -1" class="form">
+                <textarea rows="20" cols="20" v-model="goal_object.title" class="input glass">{{ goal_object.title }}</textarea>
+                <button class="btn glass" ><span class="material-symbols-outlined">check</span></button>
             </form>
         </li>
-        <ul v-for="task in goal_object.sub_goals">
-            <TaskView :goal_object="task"/>
-        </ul>
+		<li>
+			<ul  class="sub_goals">
+            	<TaskView v-for="task in goal_object.sub_goals" :goal_object="task"/>
+        	</ul>
+		</li>
     </ul>
 </template>
 <script setup>
@@ -65,11 +70,67 @@
 </script>
 
 <style scoped>
+
+	button{
+		height: auto;
+		text-wrap:wrap;
+		width: 1em;
+	}
+	textarea{
+		min-width: auto;
+		min-height: auto;
+		width: 15em;
+		height: 2em;
+	}
+
+	.task{
+		min-width: fit-content;
+		max-width: 100%;
+		padding: 1.5em;
+		flex: 1;
+		margin-inline: auto;
+	}
+
+	.task_name{
+		background-color: #0000;
+		color: var(--text-color);
+	}
+
+	.sub_goals{
+		overflow: auto;
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+	}
+	.sub_goals > * {
+		flex: 1;
+	}
+
     .complete{
-        background-color: green;
+        background-color: rgb(82, 104,59, 0.2);
+		--background-on-hover: rgb(82, 104,59, 0.3);
+		--background-on-active: rgb(82, 120,59, 0.5);
+    }
+	:is(.complete,.incomplete):hover{
+		background: var(--background-on-hover);
+		
+	}
+
+	:is(.complete,.incomplete):active{
+		background: var(--background-on-active);
+	}
+    .incomplete{
+        background-color: rgb(209, 63, 88, 0.2);
+		--background-on-hover: rgb(209, 63, 88, 0.3);
+		--background-on-active: rgb(209, 30, 46, 0.5);
     }
 
-    .incomplete{
-        background-color: red;
-    }
+	.more_btn{
+		opacity: 0;
+	}
+
+	:is(.incomplete,.complete):hover:not(:has(:is(.complete,.incomplete):hover)) > li > .more_btn{
+		opacity: 1;
+	}
+
 </style>

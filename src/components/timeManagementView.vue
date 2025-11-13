@@ -1,12 +1,11 @@
 <template>
 	<div class="timer_wrapper">
-		<div class="timer_background glass">
+		<div class="timer_background glass round">
 			<div class="timer">
 				<p class="timer_left">{{ time_left }}</p>
 				<div class="timer_control_panel button-bar">
-					<button class="btn glass play_button" v-bind:playing="is_playing" @click="startTimer()"></button>
-					<button class="btn glass" @click="pauseTimer()">PAUSE</button>
-					<button class="btn glass" @click="stopTimer()">STOP</button>
+					<button class="btn glass play_button" v-bind:playing="is_playing" @click="playButton()"></button>
+					<button class="btn glass stop_button" @click="stopTimer()"></button>
 					<!--
 					{{ alarmStore.can_make_new_alarm }}
 					{{ alarmStore.work_cycles_complete }}
@@ -33,6 +32,14 @@ const time_left = computed(()=>{
 })
 
 const alarmStore = useAlarmStore();
+
+const playButton = ()=>{
+	if(is_playing.value){
+		pauseTimer();
+	}else{
+		startTimer();
+	}
+}
 
 function startTimer(){
 	is_playing.value = true
@@ -116,24 +123,22 @@ function startTask(){
 		width: 100%;
 	}
 	.timer_control_panel > button{
-		width: 33%;
+		width: 50%;
 		/*width: min(15em,20vw);*/
 	}
 
-	.play_button::before,.play_button::after{
+	.play_button::before,.play_button::after,.stop_button::after{
 		content: "";
 		position: absolute;
 		display: block;
 		width: 2em;
 		height: 2em;
-		background-color: var(--border-color);
+		background-color: var(--text-color);
 		inset: 0;
 		margin-inline: auto;
 		margin-block: auto;
-	}
-
-	.play_button:hover::before,.play_button:hover::after{
-		background-color: var(--text-color);
+		transition: transform 0.2s ease-in;
+		transform: scale(100%);
 	}
 	
 	.play_button::before{
@@ -156,6 +161,16 @@ function startTask(){
 	.play_button[playing=true]::after{
 		transition: clip-path 0.3s ease-in;
 		clip-path: polygon(40% 10%, 70% 10%, 70% 90%, 40% 90%);
+	}
+
+	.stop_button::after{
+		width: 1.5em;
+		height: 1.5em;
+		
+		
+	}
+	.stop_button:hover::after,.play_button:hover::after,.play_button:hover::before{
+		transform: scale(120%);
 	}
 
 </style>

@@ -13,17 +13,72 @@
   <body class="theme-dark">
     <div id="app" class="container"></div>
     <script type="module" src="/src/main.js"></script>
+	<script>
+		const body = document.querySelector("body");
+
+		let x = 0;
+		let y = 0;
+
+		let cursor_x = 0;
+		let cursor_y = 0;
+
+		let running_animation = false;
+
+		document.addEventListener("mousemove",(event)=>{
+			x = event.clientX ;
+			y = event.clientY ;
+			
+			if(!running_animation){
+				mouseInertia();
+			}
+		})
+
+		function mouseInertia(){
+			const screen_center_x = window.innerWidth/2;
+			const screen_center_y = window.innerHeight/2;
+			body.style.setProperty("--mouse-x", cursor_x);
+			body.style.setProperty("--mouse-y", cursor_y);
+			//console.log(cursor_x)
+			//console.log(cursor_y)
+			cursor_x += Math.round((x-cursor_x) * 0.1);
+			cursor_y += Math.round((y-cursor_y) * 0.1);
+			running_animation = true;
+			requestAnimationFrame(mouseInertia)
+		}
+		
+
+	</script>
 	<style>
+
+		.italic{
+			font-style: italic;
+		}
+
+		:root{
+				--r-dark-color:40;
+				--g-dark-color:47;
+				--b-dark-color:63;
+				--dark-border-color: #556
+		}
 		body{
+			--mouse-x : 0;
+			--mouse-y : 0;
+
 			font-family: 'Satoshi', sans-serif;
 			min-height: 100vh;
 			min-height: 100dvh;
+			max-height: 100vh;
+			max-height: 100dvh;
+			
 			width: min(100%, 2000px);
 			margin-inline: auto;
-			background-image: conic-gradient(from 130deg, var(--background-color) ,var(--border-color),var(--background-color));
-			background-position: right top;
+			background: conic-gradient(from calc(atan2(var(--mouse-y) , var(--mouse-x) ) - 90deg) at 0 0, var(--background-color) ,var(--border-color) ,var(--background-color));
 			color: var(--text-color);
-			overflow-y: auto;
+			transition: background-image 0.1s linear;
+		}
+
+		.margin-inline-auto{
+			margin-inline: auto;
 		}
 	</style>
   </body>

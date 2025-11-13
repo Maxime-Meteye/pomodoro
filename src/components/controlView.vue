@@ -1,21 +1,14 @@
 <template setup>
-
     <div>
-		<timeManagementView></timeManagementView>
-        <ul>
-            <li>
-                <button @click="exportTree()" popovertarget="popoverWindow">Export as JSON</button>
-            </li>
-            <li>
-                <button popovertarget="popoverWindow" @click="popover_state = 'show_json'">Import as JSON</button>
-            </li>
-			<li>
-                <button popovertarget="popoverWindow" @click="refreshKeys(true)">Load</button>
-            </li>
-			<li>
-                <button @click="saveInLocalStorage()">Save</button>
-            </li>
-        </ul>
+		<div class="f-container f-col">	
+			<timeManagementView ></timeManagementView>
+			<div class="f-container f-row margin-top-m margin-inline-auto button-bar">
+				<button class="btn glass" @click="exportTree()" popovertarget="popoverWindow">Export as JSON</button>
+				<button class="btn glass" popovertarget="popoverWindow" @click="popover_state = 'show_json'">Import as JSON</button>
+				<button class="btn glass" popovertarget="popoverWindow" @click="refreshKeys(true)">Load</button>
+				<button class="btn glass" @click="saveInLocalStorage()">Save</button>
+			</div>
+		</div>
 		<popover-view v-if="popover_state == 'show_json'">
 			<form @submit.prevent="importTree(json_tree)">
 				<textarea v-model="json_tree"></textarea>
@@ -37,7 +30,6 @@
 				</li>
 			</ul>
 		</popover-view>
-
     </div>
 </template>
 <script setup>

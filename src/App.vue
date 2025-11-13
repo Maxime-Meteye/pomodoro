@@ -1,8 +1,16 @@
 <template>
-
-  <h1 class="col-12 row-1">Pomodoro</h1>
-  <controlView class="col-12 row-6"></controlView>
-  <taskView class="col-12 row-5" :goal_object="taskStore.goals"/>
+	<header class="col-12 row-1">
+		<h1 class="italic">Pomodoro</h1>
+	</header>
+	<main class="col-12 row-10">
+		<controlView class="col-12 row-3"></controlView>
+		<div class="taskview-wrapper col-12 row-9">
+			<taskView :goal_object="taskStore.goals" class="origin_taskview"/>
+		</div>
+	</main >
+	<footer class="glass col-12 row-1">
+		<h5>© 2025 Maxime Météyé — Released under the MIT License</h5>
+	</footer>
 </template>
 <script setup>
 
@@ -13,19 +21,71 @@ import controlView from './components/controlView.vue'
 import { useTaskStore } from '@/stores/taskStore';
 const taskStore = useTaskStore()
 
+
+
+
 </script>
 <style>
-	#app{
-		backdrop-filter: blur(16px);
-		min-height: 100vh;
-		min-height: 100dvh;
+	h1{
+		font-size: clamp(20px, 8vw, 120px);
+	}
+	body{
+		
+		max-height: 100vh;
+		max-height: 100dvh;
+		max-width: 100vh;
+		max-width: 100dvh;
 	}
 
+	::-webkit-scrollbar{
+		background: #0000;
+	}
+
+	::-webkit-scrollbar-thumb{
+		background-color: #aaa0;
+		backdrop-filter: blur(4px);
+		box-shadow: inset 0px 0 7px 3px #ddd5;
+		outline: #fff5 solid 2px;
+		border-radius: 2em;
+		transition: background-color 0.2s ease-in;
+	}
+	::-webkit-scrollbar-thumb:hover{
+		background-color: #aaa2;
+	}
+
+	::-webkit-scrollbar-thumb:active{
+		background-color: #aaa5;
+	}
+
+	#app{
+		backdrop-filter: blur(32px);
+		height: 100vh;
+		height: 100dvh;
+		max-height: 100vh;
+		max-height: 100dvh;
+	}
+	
+	.glass{
+		background-color: #aaa2;
+		backdrop-filter: blur(4px);
+		box-shadow: inset 0px 0 7px 3px #ddd5;
+	}
+	.btn{
+		--border:0;
+		border: none;
+		outline: 0;
+	}
+
+	.round{
+		border-radius: max(10vw, 80px) !important;
+	}
+
+	
 	.button-bar{
 		--border-radius: 2em;
 	}
 	
-	.button-bar button{
+	.button-bar *:is(button){
 		border-radius: 0 ;
 	}
 
@@ -38,12 +98,23 @@ const taskStore = useTaskStore()
 		border-bottom-left-radius: var(--border-radius);
 	}
 
-	.glass{
-		background-color: #aaa2;
-		backdrop-filter: blur(4px);
-		border-radius: max(10vw, 80px);
-		box-shadow: inset 0 0 19px 16px #ddd5,inset 0px 0 7px 3px #ddd5;
-		outline: #fff5 solid 2px;
+	.taskview-wrapper{
+		margin-block: auto;
+		margin-inline: auto;
+		min-width: 0;
+		max-height: 100%;
+		height: 65%;
+		display: grid;
+		grid-template-columns: 1fr;
+		grid-template-rows: 1fr;
 	}
+
+	.origin_taskview{
+		overflow-y: auto;
+		min-height: 0;
+		max-height: auto;
+		height: auto;
+	}
+
 
 </style>
