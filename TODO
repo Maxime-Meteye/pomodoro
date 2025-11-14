@@ -1,7 +1,4 @@
-/*objectifs : Minuteur basique qui fonctionne pour les taches qu'on lui donne. Fais un réveil pour signaler la pause, et un autre pour signaler la reprise du boulot
-
-MUST HAVE :
-Représentation graphique du minuteur. Combien de temps restant etc.
-Gérer le onunmount de timemanagementview,
-remplacer ton systeme de watcher par un systeme de custom event. Plus cohérent et comprhénsible
-*/
+TODO confirm on save
+TODO color no saved project in white
+TODO fix width of main
+TODO Publish

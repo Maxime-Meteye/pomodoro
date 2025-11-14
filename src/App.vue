@@ -37,6 +37,8 @@ const taskStore = useTaskStore()
 	main{
 		justify-self: center;
 		width: 100%;
+		max-width: 100vw;
+		max-width: 100dvw;
 	}
 	footer{
 		align-content: center;
