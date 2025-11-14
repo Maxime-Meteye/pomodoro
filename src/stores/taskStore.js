@@ -12,26 +12,20 @@ export const useTaskStore =  defineStore('taskStore',()=>{
           sub_goals:[],
           id:ID.value
       })
-	/*
-{
-  title:"Add canvas with moving square",
-  complete: false,
-  sub_goals:[
-    {
-      title:'add canvas',
-      complete:false,
-      sub_goals:[
-        {
-          title:"resize canvas and change background",
-          complete:false
-        }
-      ]
-    }
-  ]
+function resetTree(){
+	ID.value = 0;
+	creation_date.value = Date.now();	
+	key.value = `pom-${Math.random()}-${creation_date.value}`;
+	selected_goal.value = "";
+	goals.value = {
+		title: 'Your project name',
+        complete: false,
+        sub_goals:[],
+        id:ID.value
+	}
 }
-*/
 
-function select_toggle (id){
+function selectToggle (id){
   if(selected_goal.value == id){
     selected_goal.value = -1
   }else{
@@ -39,22 +33,19 @@ function select_toggle (id){
   }
 }
 
-function add_sub_goal( parent = -1, child_name){
+function addSubGoal( parent = -1, child_name){
 
   if(parent == -1 && goals.value.title == undefined || goals.value.title == ""){//create the first goal, if no goal is provided
-    console.log('>>>>>first element')
       goals.value = {
           title: child_name,
           complete: false,
           sub_goals:[],
           id:ID.value
       }
-      //console.log(JSON.stringify(goals.value))
       ID.value++;
   }else{
       add_in_tree(child_name, parent ,goals.value)
       refreshTasksState(goals.value);
-      console.log('tracer',child_name)
   }
 }
 
@@ -104,7 +95,7 @@ const add_in_tree = (new_goal, parent ,obj)=>{
           sub_goals:[],
           id: ID.value
       })
-      select_toggle(ID.value)
+      selectToggle(ID.value)
   })
   refreshTasksState(goals.value);
 }
@@ -173,7 +164,6 @@ function loadJsonTree(json){
 }
 
 watch(goals,()=>{
-  //console.log('watcher goals',goals.value)
 },{deep:false})
 
 return{
@@ -181,13 +171,14 @@ return{
 	selected_goal,
 	creation_date,
 	key,
-	select_toggle,
-	add_sub_goal,
+	selectToggle,
+	addSubGoal,
 	startTask,
 	deleteFromTree,
 	toggleTaskCompletion,
 	exportTreeAsJson,
 	loadTree,
-	loadJsonTree
+	loadJsonTree,
+	resetTree
 }
 })

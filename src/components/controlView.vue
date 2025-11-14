@@ -2,33 +2,37 @@
     <div>
 		<div class="f-container f-col">	
 			<timeManagementView ></timeManagementView>
-			<div class="f-container f-row margin-top-m margin-inline-auto button-bar">
+			<div class="f-container f-row margin-inline-auto button-bar padding-bottom-s">
 				<button class="btn glass" @click="exportTree()" popovertarget="popoverWindow">Export as JSON</button>
 				<button class="btn glass" popovertarget="popoverWindow" @click="popover_state = 'show_json'">Import as JSON</button>
-				<button class="btn glass" popovertarget="popoverWindow" @click="refreshKeys(true)">Load</button>
-				<button class="btn glass" @click="saveInLocalStorage()">Save</button>
+				<button class="btn glass" @click="resetTree()"><span class="material-symbols-outlined">new_window</span></button>
+				<button class="btn glass" popovertarget="popoverWindow" @click="refreshKeys(true)"><span class="material-symbols-outlined">folder_open</span></button>
+				<button class="btn glass" @click="saveInLocalStorage()"><span class="material-symbols-outlined">save</span></button>
 			</div>
 		</div>
 		<popover-view v-if="popover_state == 'show_json'">
-			<form @submit.prevent="importTree(json_tree)">
-				<textarea v-model="json_tree"></textarea>
-				<button>Load</button>
+			<form @submit.prevent="importTree(json_tree)" >
+				<button class="btn glass round margin-bottom-m">Load</button>
+				<textarea v-model="json_tree" class="input" required></textarea>
 			</form>
 		</popover-view>
 		<popover-view v-if="popover_state == 'show_saved_projects'">
 
 			<div v-if="projects_keys.length == 0">
-				<p>No saved projects</p>
+				<p class="glass round">No saved projects</p>
 			</div>
-
-			<ul v-else v-for="key in projects_keys">
-				<li>
-					<button @click="loadTreeFromLocalStorage(key)" popovertarget='popoverWindow'>
-						<h5>{{ key.title }}</h5>
-						<p>{{ key.creation }}</p>
-					</button>
-				</li>
-			</ul>
+			<div v-else>
+				<p class="load_message">Select a project to load</p>
+				<ul v-for="key in projects_keys">
+					<li class="project_buttons button-bar margin-block-s">
+						<button @click="loadTreeFromLocalStorage(key)" popovertarget='popoverWindow' class="glass round theme-dark padding-a-m">
+							<h5>{{ key.title }}</h5>
+							<p>{{creation_date(key.creation) }}</p>
+						</button>
+						<button @click="deleteTreeFromLocalStorage(key.id)" class="glass round theme-danger padding-a-m margin-left-s suppr_button"><span class="material-symbols-outlined">delete</span></button>
+					</li>
+				</ul>
+			</div>
 		</popover-view>
     </div>
 </template>
@@ -37,7 +41,7 @@ import popoverView from '@/components/popoverView.vue'
 import timeManagementView from '@/components/timeManagementView.vue';
 import { useTaskStore } from '@/stores/taskStore';
 import { useStorageStore } from '@/stores/storageStore';
-import {ref} from 'vue';
+import {ref, computed} from 'vue';
 
 const json_tree = ref();
 const taskStore = useTaskStore();
@@ -45,16 +49,53 @@ const storageStore = useStorageStore();
 const popover_state = ref("");
 const projects_keys = ref([]);
 
+const leadZero = (num)=>{
+	return  num < 10 ? `0${num}` : `${num}`;
+}
 
+const creation_date = computed(()=>(date)=>{
+	const time = new Date(date)
+	return  `${leadZero(time.getDate())}/${leadZero(time.getMonth()+1)}/${time.getFullYear()} ${leadZero(time.getHours())}:${leadZero(time.getMinutes())}`
+})
 
 
 const exportTree = ()=>{
     json_tree.value = taskStore.exportTreeAsJson();
 }
 const importTree = (tree)=>{
-    taskStore.loadJsonTree(tree);
+	try{
+		taskStore.loadJsonTree(tree);
+	}catch(err){
+		window.alert(`Couldn't load project. Are you sure you copy pasted all the text ?`)
+	}
 }
 
+const resetTree = ()=>{
+
+	if(window.confirm("Are you sure ? Making a new tree doesn't save the one that is loaded now")){
+		taskStore.resetTree();
+	}
+}
+
+
+const deleteTreeFromLocalStorage = (key)=>{
+	try{
+		storageStore.deleteFromLocalStorage(key)
+		let key_match = null; //the index where the key matches the id of the key deleted from local storage
+
+		for(const index in projects_keys.value){
+			if(projects_keys.value[index].id == key){
+				key_match = index;
+				break
+			}
+		}
+		if(key_match != null){
+			projects_keys.value.splice(key_match, 1)
+		}
+	}catch(err){
+		//window.alert("Cannont delete the project")
+	}
+}
 
 
 const loadTreeFromLocalStorage = (key)=>{
@@ -65,7 +106,6 @@ const loadTreeFromLocalStorage = (key)=>{
 		taskStore.title = key.title
 	}catch(err){
 		window.alert("Cannot find local storage")
-		console.log(err);
 	}
 }
 
@@ -113,10 +153,8 @@ const refreshKeys = (open_popover = false)=>{
 	try{
 		cleanKeys();
 		projects_keys.value = storageStore.getFromLocalStorage("pom_key");
-		console.log(projects_keys.value);
 		if(open_popover){
 			popover_state.value = "show_saved_projects";
-			console.log(projects_keys.value);
 		}else{
 			popover_state.value = ""
 		}
@@ -149,10 +187,40 @@ const cleanKeys = ()=>{
 
 </script>
 
-<style>
+<style scoped>
 textarea{
-	min-height: 70vh;
-	min-width: 60em;
-	overflow-y: auto;
+	min-height: 80vh;
+	min-width: 80vw;
 }
+
+.theme-danger{
+	background-color: rgb(209, 30, 46, 0.8);
+}
+
+.btn{
+	height: auto;
+}
+
+.project_buttons{
+	min-width: 10vw;
+	min-height: 10vw;
+}
+
+
+
+@media screen and (width >= 1200px){
+.suppr_button{
+	display: none;
+}
+
+.project_buttons:hover .suppr_button{
+	display: inline-block;
+}	
+}
+
+.load_message{
+	color: var(--text-color);
+	margin-bottom: 0.5em;
+}
+
 </style>

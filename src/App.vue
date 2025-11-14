@@ -2,7 +2,7 @@
 	<header class="col-12 row-1">
 		<h1 class="italic">Pomodoro</h1>
 	</header>
-	<main class="col-12 row-10">
+	<main class="col-12 row-10 center">
 		<controlView class="col-12 row-3"></controlView>
 		<div class="taskview-wrapper col-12 row-9">
 			<taskView :goal_object="taskStore.goals" class="origin_taskview"/>
@@ -27,7 +27,20 @@ const taskStore = useTaskStore()
 </script>
 <style>
 	h1{
-		font-size: clamp(20px, 8vw, 120px);
+		font-size: clamp(25px,4vw,40px);
+	}
+	h5{
+		font-size: clamp(12px,2vw, 40px);
+	}
+	main{
+		justify-self: center;
+		width: 100%;
+	}
+	footer{
+		align-content: center;
+	}
+	header{
+		align-content: top;
 	}
 	body{
 		
@@ -63,12 +76,25 @@ const taskStore = useTaskStore()
 		height: 100dvh;
 		max-height: 100vh;
 		max-height: 100dvh;
+		width: 100vw;
+		width: 100dvw;
+		max-width: 100vw;
+		max-width: 100dvw;
 	}
 	
+	@media screen and (width >= 1200px)  {
+		main{
+			max-width: 80vw;
+			max-width: 80dvw;
+		}
+	}
+
+
 	.glass{
 		background-color: #aaa2;
 		backdrop-filter: blur(4px);
-		box-shadow: inset 0px 0 7px 3px #ddd5;
+		box-shadow: inset 0px 0 7px 3px #ddd5, 5px 5px 10px 0px #2225;
+		mix-blend-mode: screen;
 	}
 	.btn{
 		--border:0;
@@ -85,7 +111,7 @@ const taskStore = useTaskStore()
 		--border-radius: 2em;
 	}
 	
-	.button-bar *:is(button){
+	.button-bar > *:is(button){
 		border-radius: 0 ;
 	}
 

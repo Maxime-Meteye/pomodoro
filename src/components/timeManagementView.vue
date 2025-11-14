@@ -3,14 +3,10 @@
 		<div class="timer_background glass round">
 			<div class="timer">
 				<p class="timer_left">{{ time_left }}</p>
-				<div class="timer_control_panel button-bar">
+				<p class="glass working_state" :class="{working: !alarmStore.on_break, break: alarmStore.on_break}">{{ isOnBreak }}</p>
+				<div class="timer_control_panel">
 					<button class="btn glass play_button" v-bind:playing="is_playing" @click="playButton()"></button>
 					<button class="btn glass stop_button" @click="stopTimer()"></button>
-					<!--
-					{{ alarmStore.can_make_new_alarm }}
-					{{ alarmStore.work_cycles_complete }}
-					{{ alarmStore.alarm_timeout_id }}
-					-->
 				</div>
 			</div>
 		</div>
@@ -18,7 +14,7 @@
 </template>
 <script setup>
 import { useAlarmStore } from '@/stores/alarmStore.js';
-import {computed, ref} from 'vue';
+import {computed, ref, onUnmounted} from 'vue';
 
 const is_playing = ref(false);
 
@@ -29,6 +25,13 @@ const leadZero = (num)=>{
 const time_left = computed(()=>{
 	const time = new Date(alarmStore.time_before_alarm)
 	return  `${leadZero(time.getMinutes())} : ${leadZero(time.getSeconds())}`
+})
+
+const isOnBreak = computed(()=>{
+	if(alarmStore.on_break == true){
+		return "On break";
+	}
+	return "Working";
 })
 
 const alarmStore = useAlarmStore();
@@ -56,46 +59,26 @@ function stopTimer(){
 
 document.addEventListener("work_cycle_complete",()=>{
 	is_playing.value = false;
-	console.log("work done")
 })
 document.addEventListener("break_cycle_complete",()=>{
 	is_playing.value = false;
-	console.log("break done")
 })
 
-/*
-function startTask(){
-  const regex = /(\d{1,3})/
-  const time_prompt = prompt("How many minutes before a break ? Default is 25min")
-  const match = time_prompt.match(regex)
-  const ringtone = new Audio('/src/assets/audio/alarm.mp3')
 
-  if(match){
-    const task_time = parseInt(match[1]);
-    if(task_time > 0 && task_time < 60){
-      setTimeout(()=>{
-        ringtone.play()
-      },task_time*60000)
-    }
-  }else{
-    setTimeout(()=>{
-      ringtone.play()
-    },25*60000)
-  }
-}
-*/
+onUnmounted(()=>{
+	document.removeEventListener("work_cycle_complete", CustomEvent)
+	document.removeEventListener("break_cycle_complete", CustomEvent)
+})
 </script>
 
 <style scoped>
 
 	.timer_wrapper{
-		/*
-		height: 50vh;
-		height: 50dvh;
-		*/
 		align-content: center;
 		width: min(100%, 2000px);
-		padding-inline: 0.2em;
+		padding-inline: 0.5em;
+		padding-block: 1em;
+		align-self: center;
 		
 	}
 
@@ -117,6 +100,7 @@ function startTask(){
 
 	.timer_left{
 		font-size:3em;
+		text-shadow: 7px 7px 7px #002;
 	}
 
 	.timer_control_panel{
@@ -124,6 +108,7 @@ function startTask(){
 	}
 	.timer_control_panel > button{
 		width: 50%;
+		border-radius: 0;
 		/*width: min(15em,20vw);*/
 	}
 
@@ -173,4 +158,15 @@ function startTask(){
 		transform: scale(120%);
 	}
 
+	.working_state{
+		font-size: 1.2em;
+		border-radius: 2em 2em 0 0;
+	
+	}
+	.working{
+		background-color: rgb(209, 30, 46, 0.5);
+	}
+	.break{
+		background-color:rgb(82, 120, 59, 0.8);
+	}
 </style>

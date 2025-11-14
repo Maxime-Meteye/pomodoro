@@ -9,7 +9,7 @@ export const useStorageStore = defineStore('storageStore',()=>{
 
 	watch(can_read,(old_state, new_state)=>{
 		if(new_state === false){
-			can_write = false;
+			can_write.value = false;
 		}
 	})
 
@@ -50,7 +50,7 @@ export const useStorageStore = defineStore('storageStore',()=>{
 		try{
 			return JSON.parse(localStorage.getItem(key));
 		}catch(err){
-			can_read = false;
+			can_read.value = false;
 			return fallback;
 		}
 	}
@@ -59,7 +59,16 @@ export const useStorageStore = defineStore('storageStore',()=>{
 		try{
 			localStorage.setItem(key,JSON.stringify(value));
 		}catch(err){
-			can_write = false;
+			can_write.value = false;
+		}
+	}
+
+	function deleteFromLocalStorage(key){
+		try{
+			localStorage.removeItem(key)
+			can_write.value = true
+		}catch(err){
+			
 		}
 	}
 	
@@ -70,6 +79,7 @@ export const useStorageStore = defineStore('storageStore',()=>{
 		calculateAvailableSpace,
 		isStorageAvailable,
 		getFromLocalStorage,
-		setLocalStorage
+		setLocalStorage,
+		deleteFromLocalStorage
 	}
 })

@@ -22,7 +22,6 @@ export const useAlarmStore = defineStore("alarmStore",()=>{
 
 	function  createAlarm (duration,callback = ()=>{}){
 		if(can_make_new_alarm.value){
-			console.log("debug")
 			deleteAlarm();
 			alarm_timeout_id.value = setTimeout(()=>{
 				ringtones[work_ringtone.value].play(); //can be changed later to customise ringtone for each situation.
@@ -55,7 +54,6 @@ export const useAlarmStore = defineStore("alarmStore",()=>{
 	}
 
 	function pauseTimer(){
-		console.log("pause")
 		deleteAlarm();
 
 	}
@@ -146,6 +144,7 @@ export const useAlarmStore = defineStore("alarmStore",()=>{
 		time_before_alarm,
 		work_cycles_complete,
 		can_make_new_alarm,
-		alarm_timeout_id
+		alarm_timeout_id,
+		on_break
 	};
 })
