@@ -1,3 +1,4 @@
+<!--© 2025 Maxime Météyé — Released under the MIT License-->
 <template setup>
     <div>
 		<div class="f-container f-col">	

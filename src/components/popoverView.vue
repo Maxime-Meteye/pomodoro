@@ -1,3 +1,4 @@
+<!--© 2025 Maxime Météyé — Released under the MIT License-->
 <template setup>
 <div popover id="popoverWindow" class="popover glass">
 	<div class="slot_container">

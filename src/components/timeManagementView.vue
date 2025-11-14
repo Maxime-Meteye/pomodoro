@@ -1,3 +1,4 @@
+<!--© 2025 Maxime Météyé — Released under the MIT License-->
 <template>
 	<div class="timer_wrapper">
 		<div class="timer_background glass round">

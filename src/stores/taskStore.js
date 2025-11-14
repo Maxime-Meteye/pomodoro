@@ -1,3 +1,4 @@
+//© 2025 Maxime Météyé — Released under the MIT License
 import {defineStore} from 'pinia'
 import {ref,watch} from 'vue'
 

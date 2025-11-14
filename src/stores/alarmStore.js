@@ -1,3 +1,4 @@
+//© 2025 Maxime Météyé — Released under the MIT License
 import {ref, watch} from "vue";
 import { defineStore } from "pinia";
 import alarm from '@/assets/audio/alarm.mp3';

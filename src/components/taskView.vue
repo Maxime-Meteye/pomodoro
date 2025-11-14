@@ -1,3 +1,4 @@
+<!--© 2025 Maxime Météyé — Released under the MIT License-->
 <template>
     <ul class="glass round task" :class="{complete: goal_object.complete, incomplete: !goal_object.complete}">
         <li v-if="editing_task != goal_object.id" class="task_container">

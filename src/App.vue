@@ -1,3 +1,4 @@
+<!--© 2025 Maxime Météyé — Released under the MIT License-->
 <template>
 	<header class="col-12 row-1">
 		<h1 class="italic">Pomodoro</h1>
@@ -10,6 +11,7 @@
 	</main >
 	<footer class="glass col-12 row-1">
 		<h5>© 2025 Maxime Météyé — Released under the MIT License</h5>
+		<p>Icons by Google, Satoshi font by Indian Type Foundry</p>
 	</footer>
 </template>
 <script setup>
@@ -46,8 +48,8 @@ const taskStore = useTaskStore()
 		
 		max-height: 100vh;
 		max-height: 100dvh;
-		max-width: 100vh;
-		max-width: 100dvh;
+		max-width: 100vw;
+		max-width: 100dvw;
 	}
 
 	::-webkit-scrollbar{
