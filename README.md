@@ -7,6 +7,9 @@ Styled with [breezeflex](https://github.com/Maxime-Meteye/breezeFlex).
 ## Features
 Smart alarm clock that keeps track of your pomodori. Exporting/importing your projects as JSON, Saving/loading them from local Storage.
 
+## Demo
+You can find the demo [here](https://maxime-meteye.github.io/pomodoro/).
+
 ## Install
 
 To install the project install pnpm and run 
