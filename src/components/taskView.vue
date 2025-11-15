@@ -8,7 +8,7 @@
 			</div>
             <div v-if="taskStore.selected_goal == goal_object.id" class="padding-block-s padding-inline-s">
                 <button class="btn glass" @click="add_child(goal_object.id)"><span class="material-symbols-outlined">add</span></button>
-                <button class="btn glass" @click="delete_child(goal_object.id)"><span class="material-symbols-outlined">remove</span></button>
+                <button class="btn glass" @click="delete_task(goal_object.id)"><span class="material-symbols-outlined">remove</span></button>
                 <button class="btn glass complete_button" v-if="goal_object?.sub_goals?.length == 0 " @click="toggleTaskCompletion(goal_object.id)">
                     <span class="material-symbols-outlined" v-if="!goal_object.complete">check</span>
                     <span class="material-symbols-outlined" v-else>close</span>
@@ -41,7 +41,8 @@
     const add_child = (parent)=>{
         taskStore.addSubGoal(parent,prompt(`what's your task ?`))
     }
-    const delete_child = (target_id)=>{
+    const delete_task = (target_id)=>{
+		console.log("taskview delete", target_id);
         taskStore.deleteFromTree(target_id)
     }
 

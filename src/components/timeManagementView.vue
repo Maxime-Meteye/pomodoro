@@ -13,7 +13,9 @@
 		</div>
 	</div>
 </template>
+
 <script setup>
+
 import { useAlarmStore } from '@/stores/alarmStore.js';
 import {computed, ref, onUnmounted} from 'vue';
 

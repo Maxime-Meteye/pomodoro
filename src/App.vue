@@ -18,8 +18,8 @@
 
 
 
-import taskView from './components/taskView.vue'
-import controlView from './components/controlView.vue'
+import taskView from '@/components/taskView.vue'
+import controlView from '@/components/controlView.vue'
 import { useTaskStore } from '@/stores/taskStore';
 const taskStore = useTaskStore()
 

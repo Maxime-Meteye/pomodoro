@@ -5,17 +5,20 @@
 			<timeManagementView ></timeManagementView>
 			<div class="f-container f-row margin-inline-auto button-bar padding-bottom-s">
 				<button class="btn glass" @click="exportTree()" popovertarget="popoverWindow">Export as JSON</button>
-				<button class="btn glass" popovertarget="popoverWindow" @click="popover_state = 'show_json'">Import as JSON</button>
+				<button class="btn glass" popovertarget="popoverWindow" @click="popover_state = 'load_json'">Import as JSON</button>
 				<button class="btn glass" @click="resetTree()"><span class="material-symbols-outlined">new_window</span></button>
 				<button class="btn glass" popovertarget="popoverWindow" @click="refreshKeys(true)"><span class="material-symbols-outlined">folder_open</span></button>
 				<button class="btn glass" @click="saveInLocalStorage()"><span class="material-symbols-outlined">save</span></button>
 			</div>
 		</div>
-		<popover-view v-if="popover_state == 'show_json'">
+		<popover-view v-if="popover_state == 'load_json'">
 			<form @submit.prevent="importTree(json_tree)" >
 				<button class="btn glass round margin-bottom-m">Load</button>
 				<textarea v-model="json_tree" class="input" required></textarea>
 			</form>
+		</popover-view>
+		<popover-view v-if="popover_state == 'export_json'">			
+			<textarea v-model="json_tree" class="input" required></textarea>
 		</popover-view>
 		<popover-view v-if="popover_state == 'show_saved_projects'">
 
@@ -64,6 +67,7 @@ const creation_date = computed(()=>(date)=>{
 
 const exportTree = ()=>{
     json_tree.value = taskStore.exportTreeAsJson();
+	popover_state.value = 'export_json';
 }
 const importTree = (tree)=>{
 	try{

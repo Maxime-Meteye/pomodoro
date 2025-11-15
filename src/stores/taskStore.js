@@ -49,21 +49,9 @@ export const useTaskStore =  defineStore('taskStore',()=>{
 
 	//parent :int The id of the parent we want to add goal to
 	//child_name :string
-	function addSubGoal( parent = -1, child_name){
-		if(parent == -1 && goals.value.title == undefined || goals.value.title == ""){//create the first goal, if no goal is provided
-			//TODO Evaluate if still used
-			console.log(">>>>")
-			goals.value = {
-				title: child_name,
-				complete: false,
-				sub_goals:[],
-				id:ID.value
-			}
-			ID.value++;
-		}else{
-			addInTree(child_name, parent ,goals.value)
-			refreshTasksState(goals.value);
-		}
+	function addSubGoal( parent, child_name){
+		addInTree(child_name, parent ,goals.value)
+		refreshTasksState(goals.value);
 	}
 
 	//target_id :int The id of the task we must delete
@@ -129,7 +117,7 @@ export const useTaskStore =  defineStore('taskStore',()=>{
 		callbackFunction :function is executed upon finding the object with correct target_id or it's parent
 		is being passed the found object.
 	*/
-	const findInTree = (target_id, obj,callbackFunction = ()=>{},mode = "")=>{
+	const findInTree = (target_id, obj, callbackFunction = ()=>{}, mode = "")=>{
 		let filter = obj.id == target_id
 		if(mode == "MATCH_PARENT"){
 			filter = obj.sub_goals.findIndex((element)=>
@@ -140,22 +128,9 @@ export const useTaskStore =  defineStore('taskStore',()=>{
 			callbackFunction(obj);
 		}else{
 			obj.sub_goals.find(el=>{
-				findInTree(target_id,el,callbackFunction,mode)
+				findInTree(target_id, el, callbackFunction, mode)
 			})
 		}
-	}
-
-	//searches if task with the same name exist
-	//TODO See if this is still used
-	const taskExists = (search, obj) => {
-		let find = obj.title == search;
-		if(!find){
-			find = obj.sub_goals.find(el => {
-				return taskExists(search, el);
-			})
-			find = find != undefined
-		}
-		return find != false;
 	}
 
 	function exportTreeAsJson(){
