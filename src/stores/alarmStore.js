@@ -8,19 +8,22 @@ export const useAlarmStore = defineStore("alarmStore",()=>{
 	let alarm_timeout_id = ref(0) ; //TimeoutID :int
 	let timer_interval_id = ref(0);  //TimeoutID :int
 	const time_before_alarm = ref(0) ; //Time left before alarm rings :int
-	const work_duration = ref(3000); // 25*60000 Time used as reference for work duration :int
-	const short_break_duration = ref(5*1000); //Time used as reference for short break duration :int
-	const long_break_duration = ref(25*1000); //Time used as reference for long break duration :int
+	const work_duration = ref(30*60000); // 25*60000 Time used as reference for work duration :int
+	const short_break_duration = ref(5*60000); //Time used as reference for short break duration :int
+	const long_break_duration = ref(25*60000); //Time used as reference for long break duration :int
 	const ringtones = [new Audio(alarm)]; //contains every ringtones used
 	const work_ringtone = ref(0); //:int index of the ringtone to use
 	const break_ringtone = ref(1);//:int index of the ringtone to use
-	const can_make_new_alarm = ref(true);
-	const work_cycles_before_long_break = ref(3);
-	const work_cycles_complete = ref(0);
-	const on_break = ref(false);
-	const break_event_name = "break_cycle_complete";
-	const work_event_name = "work_cycle_complete";
+	const can_make_new_alarm = ref(true); //:bool
+	const work_cycles_before_long_break = ref(3); //:int
+	const work_cycles_complete = ref(0); //:int
+	const on_break = ref(false); //:bool
+	const break_event_name = "break_cycle_complete"; //:string the event under which the store announce that a break is over
+	const work_event_name = "work_cycle_complete";	//:string the event under which the store announce that work is over
 
+	/*	duration :int milliseconds until the alarm is supposed to ring
+		callback :function
+	*/
 	function  createAlarm (duration,callback = ()=>{}){
 		if(can_make_new_alarm.value){
 			deleteAlarm();
@@ -38,6 +41,7 @@ export const useAlarmStore = defineStore("alarmStore",()=>{
 		}
 	}
 
+	//watches alarm_timeout_id, switches can_make_new_alarms to avoid duplicate alarms
 	watch(alarm_timeout_id,(new_id,old_id)=>{
 		if(new_id === 0 || new_id === -1){ 
 			can_make_new_alarm.value = true;
@@ -54,35 +58,42 @@ export const useAlarmStore = defineStore("alarmStore",()=>{
 		timer_interval_id.value = 0;
 	}
 
+	//used by the ui to seemingly pause the alarm
+	//in truth we just destroy timeouts and intervals without reseting the time left
 	function pauseTimer(){
 		deleteAlarm();
-
 	}
 
+	//used by the ui deletes interval and timeout but resets the timer
 	function stopTimer(){
 		deleteAlarm();
 		time_before_alarm.value = 0;
 	}
 
+	//resume a paused alarm
 	function resumeTimer(){
 		createAlarm(time_before_alarm.value)
 	}
 
+	//unused for now changes the time left before alarm rings
 	function updateTimer(new_duration){
 		pauseTimer();
 		createAlarm(new_duration);
 	}
 
+	//Used at the start of work cycle
 	function startWork(){
 		createAlarm(work_duration.value, ()=>{
 			completeWorkCycle()
 		});
 	}
 
+	//name :string
 	function emitEvent(name){
 		document.dispatchEvent(new CustomEvent(name));
 	}
 
+	//used at the end of each work cycle
 	function completeWorkCycle(){
 		work_cycles_complete.value ++;
 		if(work_cycles_complete.value <= work_cycles_before_long_break.value){
@@ -109,6 +120,7 @@ export const useAlarmStore = defineStore("alarmStore",()=>{
 		}
 	}
 
+	//Detects if user is supposed to work on be on break and start whatever is relevant
 	function startCycle(){
 		if(!on_break.value){
 			startWork();
@@ -117,6 +129,7 @@ export const useAlarmStore = defineStore("alarmStore",()=>{
 		}
 	}
 
+	//Detects if we must resume a paused timer or if we start a new work/break cycle
 	function startTimer(){
 		if(time_before_alarm.value == 0){
 			startCycle();

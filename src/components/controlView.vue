@@ -20,7 +20,7 @@
 		<popover-view v-if="popover_state == 'show_saved_projects'">
 
 			<div v-if="projects_keys.length == 0">
-				<p class="glass round">No saved projects</p>
+				<p class="glass round empty_project_list">No saved projects</p>
 			</div>
 			<div v-else>
 				<p class="load_message">Select a project to load</p>
@@ -47,9 +47,11 @@ import {ref, computed} from 'vue';
 const json_tree = ref();
 const taskStore = useTaskStore();
 const storageStore = useStorageStore();
-const popover_state = ref("");
+const popover_state = ref(""); //:string switches what is displayed in popover
 const projects_keys = ref([]);
 
+//Add leading zero to a number under 10;
+//Useful for dates.
 const leadZero = (num)=>{
 	return  num < 10 ? `0${num}` : `${num}`;
 }
@@ -120,7 +122,6 @@ const saveInLocalStorage = ()=>{
 		title : taskStore.goals.title
 	}
 
-	//TODO Handle case where pom_key is null.
 	/*Fetching existing keys */
 	try{
 		const stored_keys = storageStore.getFromLocalStorage("pom_key", [])
@@ -142,14 +143,14 @@ const saveInLocalStorage = ()=>{
 		/*Saving keys */
 		storageStore.setLocalStorage("pom_key",stored_keys);
 		storageStore.setLocalStorage(key.id, tree)
-
-		//TODO Handle feedback
+		window.alert("Saved successfuly");
 	}catch(err){
 		window.alert("Cannot save project in local storage: Memory full. Please delete an unused project.")
 	}
 	
 }
 
+//Loads the keys of every projects used
 const refreshKeys = (open_popover = false)=>{
 	try{
 		cleanKeys();
@@ -165,6 +166,8 @@ const refreshKeys = (open_popover = false)=>{
 	}
 }
 
+//cleans the key array of unused keys.
+//More useful for developement but probably a good idea to keep it.
 const cleanKeys = ()=>{
 	const stored_keys = storageStore.getFromLocalStorage("pom_key");
 	//Lookup every value associated with existing key. Delete the value if orphan
@@ -178,13 +181,6 @@ const cleanKeys = ()=>{
 
 
 
-/*
-	lookup localstorage.key if not empty
-		open popover with list of project, and names.
-		if user chooses one.
-			lookup localstorage[chosenkey] use try catch
-			when saving save under localstorage[chosenkey]
-*/
 
 </script>
 

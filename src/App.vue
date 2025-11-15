@@ -39,19 +39,13 @@ const taskStore = useTaskStore()
 		width: 100%;
 		max-width: 100vw;
 		max-width: 100dvw;
+		min-width: auto;
 	}
 	footer{
 		align-content: center;
 	}
 	header{
 		align-content: top;
-	}
-	body{
-		
-		max-height: 100vh;
-		max-height: 100dvh;
-		max-width: 100vw;
-		max-width: 100dvw;
 	}
 
 	::-webkit-scrollbar{
@@ -98,7 +92,6 @@ const taskStore = useTaskStore()
 		background-color: #aaa2;
 		backdrop-filter: blur(4px);
 		box-shadow: inset 0px 0 7px 3px #ddd5, 5px 5px 10px 0px #2225;
-		mix-blend-mode: screen;
 	}
 	.btn{
 		--border:0;
@@ -142,8 +135,6 @@ const taskStore = useTaskStore()
 	.origin_taskview{
 		overflow-y: auto;
 		min-height: 0;
-		max-height: auto;
-		height: auto;
 	}
 
 

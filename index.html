@@ -61,21 +61,30 @@
 				--b-dark-color:63;
 				--dark-border-color: #556
 		}
+		p,h1,h5,h2,h3,h4,h6{
+			color: var(--text-color);
+		}
 		body{
 			--mouse-x : 0;
 			--mouse-y : 0;
 
 			font-family: 'Satoshi', sans-serif;
-			min-height: 100vh;
-			min-height: 100dvh;
 			max-height: 100vh;
 			max-height: 100dvh;
+			max-width: 100vw;
+			max-width: 100dvw;
 			
+
 			width: min(100%, 2000px);
 			margin-inline: auto;
 			background: conic-gradient(from calc(atan2(var(--mouse-y) , var(--mouse-x) ) - 90deg) at 0 0, var(--background-color) ,var(--border-color) ,var(--background-color));
 			color: var(--text-color);
 			transition: background-image 0.1s linear;
+			
+		}
+
+		*{
+			max-width: 100vw;
 		}
 
 		.margin-inline-auto{
