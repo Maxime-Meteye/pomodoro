@@ -6,7 +6,7 @@
 				<p class="timer_left">{{ time_left }}</p>
 				<p class="glass working_state" :class="{working: !alarmStore.on_break, break: alarmStore.on_break}">{{ isOnBreak }}</p>
 				<div class="timer_control_panel">
-					<button class="btn glass play_button" v-bind:playing="is_playing" @click="playButton()"></button>
+					<button class="btn glass play_button" v-bind:playing="is_playing" @click="playButton()" :title="!is_playing ?'Start the timer' :'Pause the timer'"></button>
 					<button class="btn glass stop_button" @click="stopTimer()"></button>
 				</div>
 			</div>

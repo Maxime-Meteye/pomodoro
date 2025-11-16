@@ -58,9 +58,15 @@ export const useStorageStore = defineStore('storageStore',()=>{
 		fallback :typeless will output fallback if no data is found.
 		A "dirty" trick to ensure calling function always gets data as a form it expects.
 	*/
-	function getFromLocalStorage(key,fallback = {}){
+	function getFromLocalStorage(key, fallback = {}){
 		try{
-			return JSON.parse(localStorage.getItem(key));
+			
+			const value = localStorage.getItem(key)
+			if(value != null){
+				return JSON.parse(value);
+			}else{
+				throw new Error("Not value found");
+			}
 		}catch(err){
 			can_read.value = false;
 			return fallback;

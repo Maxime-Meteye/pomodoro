@@ -6,14 +6,14 @@
 			<div class="f-container f-row margin-inline-auto button-bar padding-bottom-s">
 				<button class="btn glass" @click="exportTree()" popovertarget="popoverWindow">Export as JSON</button>
 				<button class="btn glass" popovertarget="popoverWindow" @click="popover_state = 'load_json'">Import as JSON</button>
-				<button class="btn glass" @click="resetTree()"><span class="material-symbols-outlined">new_window</span></button>
-				<button class="btn glass" popovertarget="popoverWindow" @click="refreshKeys(true)"><span class="material-symbols-outlined">folder_open</span></button>
-				<button class="btn glass" @click="saveInLocalStorage()"><span class="material-symbols-outlined">save</span></button>
+				<button class="btn glass" @click="resetTree()" title="Make a new project"><span class="material-symbols-outlined">new_window</span></button>
+				<button class="btn glass" popovertarget="popoverWindow" @click="refreshKeys(true)" title="Load a saved project"><span class="material-symbols-outlined">folder_open</span></button>
+				<button class="btn glass" @click="saveInLocalStorage()"><span class="material-symbols-outlined" title="Save your project">save</span></button>
 			</div>
 		</div>
 		<popover-view v-if="popover_state == 'load_json'">
 			<form @submit.prevent="importTree(json_tree)" >
-				<button class="btn glass round margin-bottom-m">Load</button>
+				<button class="btn glass round margin-bottom-m" title="Load the JSON">Load</button>
 				<textarea v-model="json_tree" class="input" required></textarea>
 			</form>
 		</popover-view>
@@ -22,18 +22,18 @@
 		</popover-view>
 		<popover-view v-if="popover_state == 'show_saved_projects'">
 
-			<div v-if="projects_keys.length == 0">
+			<div v-if="projects_keys?.length == 0">
 				<p class="glass round empty_project_list">No saved projects</p>
 			</div>
 			<div v-else>
 				<p class="load_message">Select a project to load</p>
 				<ul v-for="key in projects_keys">
 					<li class="project_buttons button-bar margin-block-s">
-						<button @click="loadTreeFromLocalStorage(key)" popovertarget='popoverWindow' class="glass round theme-dark padding-a-m">
+						<button @click="loadTreeFromLocalStorage(key)" title="Load this project" popovertarget='popoverWindow' class="glass round theme-dark padding-a-m">
 							<h5>{{ key.title }}</h5>
 							<p>{{creation_date(key.creation) }}</p>
 						</button>
-						<button @click="deleteTreeFromLocalStorage(key.id)" class="glass round theme-danger padding-a-m margin-left-s suppr_button"><span class="material-symbols-outlined">delete</span></button>
+						<button @click="deleteTreeFromLocalStorage(key.id)" title="Delete this project" class="glass round theme-danger padding-a-m margin-left-s suppr_button"><span class="material-symbols-outlined">delete</span></button>
 					</li>
 				</ul>
 			</div>
@@ -127,7 +127,6 @@ const saveInLocalStorage = ()=>{
 	}
 
 	/*Fetching existing keys */
-	try{
 		const stored_keys = storageStore.getFromLocalStorage("pom_key", [])
 		/*Whether key was saved in stored_keys or not */
 		let saved_status = 0;
@@ -148,9 +147,9 @@ const saveInLocalStorage = ()=>{
 		storageStore.setLocalStorage("pom_key",stored_keys);
 		storageStore.setLocalStorage(key.id, tree)
 		window.alert("Saved successfuly");
-	}catch(err){
-		window.alert("Cannot save project in local storage: Memory full. Please delete an unused project.")
-	}
+		
+		
+		//window.alert("Cannot save project in local storage: Memory full. Please delete an unused project.")
 	
 }
 

@@ -2,6 +2,7 @@
 <template setup>
 <div popover id="popoverWindow" class="popover glass">
 	<div class="slot_container">
+		<button class="close_button glass btn theme-danger" popovertarget="popoverWindow" title="Close this window"><span class="material-symbols-outlined">close</span></button>
 		<slot></slot>
 	</div>
 </div>
@@ -35,5 +36,12 @@
 	padding:4em 2em;
 }
 
+.close_button{
+	margin-left: 80%;
+	background-color: var(--background-color);
+}
+.theme-danger{
+	--background-color : #d227
+}
 
 </style>

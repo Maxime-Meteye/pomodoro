@@ -31,9 +31,10 @@ const taskStore = useTaskStore()
 	h1{
 		font-size: clamp(25px,4vw,40px);
 	}
-	h5{
-		font-size: clamp(12px,2vw, 40px);
+	h5, footer p{
+		font-size: 0.8em;
 	}
+	
 	main{
 		justify-self: center;
 		width: 100%;

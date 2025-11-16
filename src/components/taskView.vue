@@ -7,9 +7,9 @@
 				<button @click="editTask(goal_object.id)" class="btn glass more_btn"><span class="material-symbols-outlined">edit</span></button>
 			</div>
             <div v-if="taskStore.selected_goal == goal_object.id" class="padding-block-s padding-inline-s">
-                <button class="btn glass" @click="add_child(goal_object.id)"><span class="material-symbols-outlined">add</span></button>
-                <button class="btn glass" @click="delete_task(goal_object.id)"><span class="material-symbols-outlined">remove</span></button>
-                <button class="btn glass complete_button" v-if="goal_object?.sub_goals?.length == 0 " @click="toggleTaskCompletion(goal_object.id)">
+                <button class="btn glass" @click="add_child(goal_object.id)" title="Add a subtask"><span class="material-symbols-outlined">add</span></button>
+                <button class="btn glass" @click="delete_task(goal_object.id)" title="Delete this task"><span class="material-symbols-outlined">remove</span></button>
+                <button class="btn glass complete_button" v-if="goal_object?.sub_goals?.length == 0 " @click="toggleTaskCompletion(goal_object.id)" title="Mark this task as completed">
                     <span class="material-symbols-outlined" v-if="!goal_object.complete">check</span>
                     <span class="material-symbols-outlined" v-else>close</span>
                 </button>
@@ -18,7 +18,7 @@
         <li v-else>
             <form @submit.prevent="editing_task = -1" class="form">
                 <textarea rows="20" cols="20" v-model="goal_object.title" class="input glass">{{ goal_object.title }}</textarea>
-                <button class="btn glass" ><span class="material-symbols-outlined">check</span></button>
+                <button class="btn glass" ><span class="material-symbols-outlined" title="Change the name of this task">check</span></button>
             </form>
         </li>
 		<li>
