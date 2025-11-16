@@ -65,7 +65,7 @@ export const useStorageStore = defineStore('storageStore',()=>{
 			if(value != null){
 				return JSON.parse(value);
 			}else{
-				throw new Error("Not value found");
+				throw new Error("No value found");
 			}
 		}catch(err){
 			can_read.value = false;

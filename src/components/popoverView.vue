@@ -1,8 +1,8 @@
 <!--© 2025 Maxime Météyé — Released under the MIT License-->
 <template setup>
 <div popover id="popoverWindow" class="popover glass">
+	<button class="close_button glass btn theme-danger" popovertarget="popoverWindow" title="Close this window"><span class="material-symbols-outlined">close</span></button>
 	<div class="slot_container">
-		<button class="close_button glass btn theme-danger" popovertarget="popoverWindow" title="Close this window"><span class="material-symbols-outlined">close</span></button>
 		<slot></slot>
 	</div>
 </div>
@@ -13,7 +13,7 @@
 	transition: bottom 0.2s;
 	margin-inline: auto;
 	margin-block: auto;
-	height: 80vh;
+	height: 40vh;
 	max-width: 100vw;
 	max-width: 100dvw;
 	bottom: 0;
@@ -31,13 +31,14 @@
 }
 
 .slot_container{
-	max-height: 100%;
-	overflow-y: auto;
-	padding:4em 2em;
+	max-height: 70%;
+	overflow-y: scroll;
+	padding:1em;
 }
 
 .close_button{
-	margin-left: 80%;
+	margin: 1em;
+	margin-left: 75%;
 	background-color: var(--background-color);
 }
 .theme-danger{

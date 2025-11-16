@@ -13,12 +13,12 @@
 		</div>
 		<popover-view v-if="popover_state == 'load_json'">
 			<form @submit.prevent="importTree(json_tree)" >
+				<textarea v-model="json_tree" class="input scroll-y" required></textarea>
 				<button class="btn glass round margin-bottom-m" title="Load the JSON">Load</button>
-				<textarea v-model="json_tree" class="input" required></textarea>
 			</form>
 		</popover-view>
 		<popover-view v-if="popover_state == 'export_json'">			
-			<textarea v-model="json_tree" class="input" required></textarea>
+			<textarea v-model="json_tree" class="input scroll-y" required ></textarea>
 		</popover-view>
 		<popover-view v-if="popover_state == 'show_saved_projects'">
 
@@ -27,7 +27,7 @@
 			</div>
 			<div v-else>
 				<p class="load_message">Select a project to load</p>
-				<ul v-for="key in projects_keys">
+				<ul v-for="key in projects_keys" class="scroll-y">
 					<li class="project_buttons button-bar margin-block-s">
 						<button @click="loadTreeFromLocalStorage(key)" title="Load this project" popovertarget='popoverWindow' class="glass round theme-dark padding-a-m">
 							<h5>{{ key.title }}</h5>
@@ -127,8 +127,9 @@ const saveInLocalStorage = ()=>{
 	}
 
 	/*Fetching existing keys */
-		const stored_keys = storageStore.getFromLocalStorage("pom_key", [])
+		let stored_keys = storageStore.getFromLocalStorage("pom_key", [])
 		/*Whether key was saved in stored_keys or not */
+
 		let saved_status = 0;
 		/*Searching key with identic id */
 		for(const stored_key in stored_keys){
@@ -138,6 +139,10 @@ const saveInLocalStorage = ()=>{
 				saved_status = 1
 				break;
 			}
+		}
+
+		if(!Array.isArray(stored_keys)){
+			stored_keys = [];
 		}
 		//if key wasn't saved no similar key was found we push it into the array.
 		if(saved_status === 0){
@@ -157,7 +162,7 @@ const saveInLocalStorage = ()=>{
 const refreshKeys = (open_popover = false)=>{
 	try{
 		cleanKeys();
-		projects_keys.value = storageStore.getFromLocalStorage("pom_key");
+		projects_keys.value = storageStore.getFromLocalStorage("pom_key",[]);
 		if(open_popover){
 			popover_state.value = "show_saved_projects";
 		}else{
@@ -172,13 +177,15 @@ const refreshKeys = (open_popover = false)=>{
 //cleans the key array of unused keys.
 //More useful for developement but probably a good idea to keep it.
 const cleanKeys = ()=>{
-	const stored_keys = storageStore.getFromLocalStorage("pom_key");
+	const stored_keys = storageStore.getFromLocalStorage("pom_key",[]);
 	//Lookup every value associated with existing key. Delete the value if orphan
 	for(const key in stored_keys){
-		if(storageStore.getFromLocalStorage(stored_keys[key].id) === null){
+		console.log(storageStore.getFromLocalStorage(stored_keys[key].id, null))
+		if(storageStore.getFromLocalStorage(stored_keys[key].id, null) === null){
 			stored_keys.splice(key,1);
 		}
 	}
+
 	storageStore.setLocalStorage("pom_key", stored_keys);
 }
 
@@ -188,10 +195,24 @@ const cleanKeys = ()=>{
 </script>
 
 <style scoped>
+/*
 textarea{
 	min-height: 80vh;
 	min-width: 80vw;
 }
+*/
+
+textarea{
+	min-height: 20vh;
+	min-height: 20dvh;
+	max-height: 80vh;
+	max-height: 80dvh;
+	overflow-y: auto;
+	min-width: 80vw;
+	max-width: 80vw;
+}
+
+
 
 .theme-danger{
 	background-color: rgb(209, 30, 46, 0.8);

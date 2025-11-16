@@ -7,20 +7,15 @@
 				<button @click="editTask(goal_object.id)" class="btn glass more_btn"><span class="material-symbols-outlined">edit</span></button>
 			</div>
             <div v-if="taskStore.selected_goal == goal_object.id" class="padding-block-s padding-inline-s">
-                <button class="btn glass" @click="add_child(goal_object.id)" title="Add a subtask"><span class="material-symbols-outlined">add</span></button>
-                <button class="btn glass" @click="delete_task(goal_object.id)" title="Delete this task"><span class="material-symbols-outlined">remove</span></button>
+                <button class="btn glass" @click="addChild(goal_object.id)" title="Add a subtask"><span class="material-symbols-outlined">add</span></button>
+                <button class="btn glass" @click="deleteTask(goal_object.id)" title="Delete this task"><span class="material-symbols-outlined">remove</span></button>
                 <button class="btn glass complete_button" v-if="goal_object?.sub_goals?.length == 0 " @click="toggleTaskCompletion(goal_object.id)" title="Mark this task as completed">
                     <span class="material-symbols-outlined" v-if="!goal_object.complete">check</span>
                     <span class="material-symbols-outlined" v-else>close</span>
                 </button>
             </div>
         </li>
-        <li v-else>
-            <form @submit.prevent="editing_task = -1" class="form">
-                <textarea rows="20" cols="20" v-model="goal_object.title" class="input glass">{{ goal_object.title }}</textarea>
-                <button class="btn glass" ><span class="material-symbols-outlined" title="Change the name of this task">check</span></button>
-            </form>
-        </li>
+        
 		<li>
 			<ul  class="sub_goals padding-a-s">
             	<TaskView v-for="task in goal_object.sub_goals" :goal_object="task"/>
@@ -38,16 +33,15 @@
     const props = defineProps(['goal_object'])
     const prop_goal_object = props.goal_object
 
-    const add_child = (parent)=>{
+    const addChild = (parent)=>{
         taskStore.addSubGoal(parent,prompt(`what's your task ?`))
     }
-    const delete_task = (target_id)=>{
-		console.log("taskview delete", target_id);
+    const deleteTask = (target_id)=>{
         taskStore.deleteFromTree(target_id)
     }
 
     const editTask = (id)=>{
-        editing_task.value = id
+		prop_goal_object.title = window.prompt("What is the new task description ?")
     }
 
     const toggleTaskCompletion = (id)=>{
